@@ -1,0 +1,34 @@
+{
+    "name": "yarnstore/shipment-import",
+    "description": "Plugin to import shipment from Dealers",
+    "version": "1.0.0",
+    "type": "shopware-platform-plugin",
+    "license": "proprietary",
+    "authors": [
+      {
+        "name": "Yanduu GmbH"
+      }
+    ],
+    "require": {
+      "yanduu/stock-import": "^1.0.0"
+    },
+    "extra": {
+      "shopware-plugin-class": "Yarnstore\\ShipmentImport\\YarnstoreShipmentImport",
+      "plugin-icon": "src/Resources/config/plugin.png",
+      "copyright": "(c) by Yanduu GmbH",
+      "label": {
+        "de-DE": "Yarnstore Shipment Import",
+        "en-GB": "Yarnstore Shipment Import"
+      },
+      "description": {
+        "de-DE": "Plugin to import shipment from Dealers",
+        "en-GB": "Plugin to import shipment from Dealers"
+      }
+    },
+    "autoload": {
+      "psr-4": {
+        "Yarnstore\\ShipmentImport\\": "src/"
+      }
+    }
+  }
+  

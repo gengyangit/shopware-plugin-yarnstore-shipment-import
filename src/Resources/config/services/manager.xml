@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="Yarnstore\ShipmentImport\Service\Manager\ShipmentQueueManager">
+            <argument type="service" id="Yanduu\ShipmentImport\Service\Writer\Queue\ShipmentQueueWriter"/>
+            <argument type="service" id="Yanduu\ShipmentImport\Service\Reader\Queue\ShipmentQueueReader"/>
+        </service>
+    </services>
+</container>
