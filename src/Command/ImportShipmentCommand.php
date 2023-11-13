@@ -25,7 +25,7 @@ class ImportShipmentCommand extends Command
      * @var string
      */
     //protected const BASE_URI = 'https://testserver.schmeichelgarne.de/shop/api/bestellung.php';
-    protected const BASE_URI = 'https://www.soul-wool.com/shop/api/bestellung.php'
+    protected const BASE_URI = 'https://www.soul-wool.com/shop/api/bestellung.php';
 
     /**
      * @var string
