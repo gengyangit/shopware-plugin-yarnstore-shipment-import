@@ -10,6 +10,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Yarnstore\ShipmentImport\Service\Client\HttpClientInterface;
 use Yarnstore\ShipmentImport\Service\Manager\ShipmentQueueManagerInterface;
+use Yarnstore\ShipmentImport\Service\Mapper\ShipmentQueueMapperInterface;
 use Yanduu\ShipmentImport\Core\Content\ShipmentQueue\ShipmentQueueCollection;
 use Yanduu\ShipmentImport\Core\Content\ShipmentQueue\ShipmentQueueEntity;
 
@@ -23,7 +24,8 @@ class ImportShipmentCommand extends Command
     /**
      * @var string
      */
-    protected const BASE_URI = 'https://www.soul-wool.com/shop/api/bestellung.php';
+    //protected const BASE_URI = 'https://testserver.schmeichelgarne.de/shop/api/bestellung.php';
+    protected const BASE_URI = 'https://www.soul-wool.com/shop/api/bestellung.php'
 
     /**
      * @var string
@@ -56,14 +58,14 @@ class ImportShipmentCommand extends Command
     protected $client;
 
     /**
-     * @var \Yarnstore\ShipmentImport\Service\Mapper\ShipmentMapperInterface
-     */
-    protected $shipmentMapper;
-
-    /**
      * @var \Yarnstore\ShipmentImport\Service\Manager\ShipmentQueueManagerInterface
      */
     protected $shipmentQueueManager;
+
+    /**
+     * @var \Yarnstore\ShipmentImport\Service\Mapper\ShipmentQueueMapperInterface
+     */
+    protected $shipmentQueueMapper;
 
     /**
      * @var \Yarnstore\ShipmentImport\Service\Writer\Queue\OrderQueueWriterInterface
@@ -82,11 +84,12 @@ class ImportShipmentCommand extends Command
     public function __construct(
         HttpClientInterface $client,
         ShipmentQueueManagerInterface $shipmentQueueManager,
-        //ShipmentMapperInterface $orderMapper,
+        ShipmentQueueMapperInterface $shipmentQueueMapper,
         //LoggerInterface $logger,
     ) {
         $this->client = $client;
         $this->shipmentQueueManager = $shipmentQueueManager;
+        $this->shipmentQueueMapper = $shipmentQueueMapper;
 
         parent::__construct();
     }
@@ -129,6 +132,17 @@ class ImportShipmentCommand extends Command
         /** @var \Yanduu\ShipmentImport\Core\Content\ShipmentQueue\ShipmentQueueEntity $shipmentEntity */
         foreach ($shipmentCollection as $shipmentEntity) {
            $shipment = $this->getShipment($shipmentEntity);
+
+           if (!array_key_exists('data', $shipment) 
+                || !isset($shipment['data'])
+            ) {
+                continue;
+            }
+
+           $shipmentQueueData = $this->shipmentQueueMapper
+                ->mapApiShipmentDataToShipmentQueueData($shipment['data'][0]);
+
+           print_r($shipmentQueueData); exit('4');
 
            $this->saveShipment($shipmentEntity->getOrderNumber(), $shipment);
         }

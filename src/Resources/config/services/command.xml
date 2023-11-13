@@ -7,6 +7,7 @@
         <service id="Yarnstore\ShipmentImport\Command\ImportShipmentCommand">
             <argument type="service" id="Yarnstore\ShipmentImport\Service\Client\HttpClient"/>
             <argument type="service" id="Yarnstore\ShipmentImport\Service\Manager\ShipmentQueueManager"/>
+            <argument type="service" id="Yarnstore\ShipmentImport\Service\Mapper\ShipmentQueueMapper" />
             <tag name="console.command"/>
         </service>
         

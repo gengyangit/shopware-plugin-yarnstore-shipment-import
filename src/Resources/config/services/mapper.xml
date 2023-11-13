@@ -1,14 +1,12 @@
-<?xml version="1.0" ?>
-
 <container xmlns="http://symfony.com/schema/dic/services"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-     <imports>
-        <import resource="./services/client.xml"/>
-        <import resource="./services/command.xml"/>
-        <import resource="./services/manager.xml"/>
-        <import resource="./services/mapper.xml"/>
-    </imports>
+    <services>
 
+        <service id="Yarnstore\ShipmentImport\Service\Mapper\ShipmentQueueMapper">
+        </service>   
+
+    </services>
+    
 </container>
