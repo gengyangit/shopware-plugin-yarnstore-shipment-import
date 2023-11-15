@@ -102,7 +102,7 @@ class ShipmentQueueMapper implements ShipmentQueueMapperInterface
                 return [
                     "shipping_carier" => $shipment["PrefLieferart"],
                     "shipping_method" => $shipment["Parcel"]["VersandArt"],
-                    "tracking_number" => $shipment["Parcel"]["ParcelNummer"],
+                    "tracking_code" => $shipment["Parcel"]["ParcelNummer"],
                     "shipment_date" => $shipment["Parcel"]["Datum"]
                 ];
             }

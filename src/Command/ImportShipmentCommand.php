@@ -24,7 +24,7 @@ class ImportShipmentCommand extends Command
     /**
      * @var string
      */
-    //protected const BASE_URI = 'https://testserver.schmeichelgarne.de/shop/api/bestellung.php';
+   // protected const BASE_URI = 'https://testserver.schmeichelgarne.de/shop/api/bestellung.php';
     protected const BASE_URI = 'https://www.soul-wool.com/shop/api/bestellung.php';
 
     /**
@@ -55,22 +55,22 @@ class ImportShipmentCommand extends Command
     /**
      * @var \Yarnstore\ShipmentImport\Service\Client\HttpClientInterface
      */
-    protected $client;
+    protected HttpClientInterface $client;
 
     /**
      * @var \Yarnstore\ShipmentImport\Service\Manager\ShipmentQueueManagerInterface
      */
-    protected $shipmentQueueManager;
+    protected ShipmentQueueManagerInterface $shipmentQueueManager;
 
     /**
      * @var \Yarnstore\ShipmentImport\Service\Mapper\ShipmentQueueMapperInterface
      */
-    protected $shipmentQueueMapper;
+    protected ShipmentQueueMapperInterface $shipmentQueueMapper;
 
     /**
      * @var \Yarnstore\ShipmentImport\Service\Writer\Queue\OrderQueueWriterInterface
      */
-    protected $orderQueueWriter;
+    protected OrderQueueWriterInterface $orderQueueWriter;
 
     /**
      * Constructor 
@@ -79,13 +79,11 @@ class ImportShipmentCommand extends Command
      * @param \Yarnstore\ShipmentImport\Service\Manager\ShipmentQueueManagerInterface $shipmentQueueManager
      * @param \Yarnstore\OrderExport\Service\Writer\Queue\OrderQueueWriterInterface $orderQueueWriter
      * @param \Yarnstore\OrderExport\Service\Mapper\OrderMapperInterface $orderMapper
-     * @param \Yarnstore\OrderExport\Service\Logger\LoggerInterface $logger
      */
     public function __construct(
         HttpClientInterface $client,
         ShipmentQueueManagerInterface $shipmentQueueManager,
         ShipmentQueueMapperInterface $shipmentQueueMapper,
-        //LoggerInterface $logger,
     ) {
         $this->client = $client;
         $this->shipmentQueueManager = $shipmentQueueManager;
@@ -134,17 +132,16 @@ class ImportShipmentCommand extends Command
            $shipment = $this->getShipment($shipmentEntity);
 
            if (!array_key_exists('data', $shipment) 
-                || !isset($shipment['data'])
+                || empty($shipment['data'])
             ) {
                 continue;
             }
 
+            
            $shipmentQueueData = $this->shipmentQueueMapper
                 ->mapApiShipmentDataToShipmentQueueData($shipment['data'][0]);
 
-           print_r($shipmentQueueData); exit('4');
-
-           $this->saveShipment($shipmentEntity->getOrderNumber(), $shipment);
+           $this->saveShipment($shipmentEntity->getOrderNumber(), $shipmentQueueData);
         }
 
         return static::SUCCESS_STATUS_CODE;
@@ -162,9 +159,11 @@ class ImportShipmentCommand extends Command
     }
 
     /**
+     * @param \Yanduu\ShipmentImport\Core\Content\ShipmentQueue\ShipmentQueueEntity $shipmentEntity
      * 
+     * @return array<string, mixed>
      */
-    protected function getShipment(ShipmentQueueEntity $shipmentEntity)
+    protected function getShipment(ShipmentQueueEntity $shipmentEntity): array
     {
         $response = $this->client->get(
             static::BASE_URI,
@@ -177,9 +176,12 @@ class ImportShipmentCommand extends Command
     }
 
     /**
+     * @param string $orderNUmber
+     * @param array<string, mixed> $shipment
      * 
+     * @return void
      */
-    protected function saveShipment(string $orderNumber, array $shipment) 
+    protected function saveShipment(string $orderNumber, array $shipment): void 
     {
         $this->shipmentQueueManager->save(
             [
